@@ -44,187 +44,267 @@ export const AcademicsView: React.FC<AcademicsViewProps> = ({
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto">
-      <div className="mb-12">
-        <span className="text-xs font-black text-red-900 uppercase tracking-widest bg-red-100 px-3 py-1 rounded-full">Student Portal</span>
-        <h2 className="text-4xl font-black text-stone-900 mt-3 tracking-tight">My Academics</h2>
-        <p className="text-stone-500 text-lg font-medium mt-1">Your personalized learning journey.</p>
+    <div className="min-h-screen bg-[#fafaf9]">
+      {/* Subtle ambient gradient */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-red-100/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-stone-200/30 rounded-full blur-[100px]" />
       </div>
 
-      {!hasAssignments ? (
-          <div className="bg-white rounded-[2rem] p-12 text-center border border-stone-100 shadow-sm">
-              <div className="w-20 h-20 bg-stone-50 rounded-full flex items-center justify-center mx-auto mb-6 text-stone-300">
-                  <GraduationCap size={40} />
+      <div className="relative z-10 p-6 md:p-10 lg:p-12 max-w-7xl mx-auto">
+        {/* Hero Header */}
+        <div className="mb-10 md:mb-14">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white shadow-sm border border-stone-200/60 mb-5">
+            <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+            <span className="text-sm font-semibold text-stone-600">My Studies</span>
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-stone-900 tracking-tight">
+            Your Academic <span className="text-red-900">Hub</span>
+          </h1>
+          
+          <p className="mt-3 text-lg text-stone-500 max-w-xl leading-relaxed">
+            Everything about your academic journey in one place.
+          </p>
+        </div>
+
+        {!hasAssignments ? (
+          // Empty State
+          <div className="max-w-xl mx-auto">
+            <div className="bg-white rounded-[2.5rem] p-12 md:p-16 text-center shadow-[0_8px_40px_-15px_rgba(0,0,0,0.08)] border border-stone-100">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-stone-100 to-stone-50 rounded-full flex items-center justify-center shadow-inner">
+                <GraduationCap className="w-10 h-10 text-stone-400" />
               </div>
-              <h3 className="text-xl font-bold text-stone-900 mb-2">No Academic Assignments</h3>
-              <p className="text-stone-500 max-w-md mx-auto">
-                  You haven't been assigned to a Faculty, Course, or Student Group yet. 
-                  Please update your profile or contact administration.
+              <h3 className="text-xl font-bold text-stone-800 mb-2">No Assignments Yet</h3>
+              <p className="text-stone-500 leading-relaxed">
+                You haven't been assigned to a Faculty, Course, or Student Group. 
+                Contact your administrator to get started.
               </p>
+            </div>
           </div>
-      ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Faculties Column */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h3 className="font-bold text-stone-700 flex items-center gap-2 text-lg">
-                  <Building2 size={20} className="text-red-900" />
-                  Your Faculty
-                </h3>
-              </div>
-              
-              {myFaculties.length > 0 ? myFaculties.map(faculty => (
-                <div 
-                    key={faculty.id} 
-                    onClick={() => handleCardClick(CommunityType.Faculty, faculty.id)}
-                    className="bg-white p-8 rounded-[2rem] border border-stone-100 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.05)] hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer group relative overflow-hidden"
-                >
-                   <div className="absolute top-0 left-0 w-full h-1.5 bg-red-900" />
-                   <div className="absolute top-4 right-4 bg-red-50 text-red-900 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                        <ArrowUpRight size={20} />
-                   </div>
-                  <div className="flex justify-between items-start relative z-10">
-                    <div>
-                        <h4 className="font-black text-stone-800 text-2xl group-hover:text-red-900 transition-colors">{faculty.name}</h4>
-                        <span className="bg-red-50 text-red-900 text-xs font-bold px-3 py-1 rounded-full mt-3 inline-block tracking-wider">{faculty.code}</span>
-                        {faculty.deanName && (
-                          <div className="mt-6 flex items-center gap-3 pt-6 border-t border-stone-50">
-                            <div className="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-500">
-                                 <GraduationCap size={18}/> 
+        ) : (
+          <div className="space-y-8">
+            
+            {/* Faculty Section - Full Width Hero Card */}
+            {myFaculties.length > 0 && (
+              <section>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-900 to-red-800 shadow-lg shadow-red-200 flex items-center justify-center">
+                    <Building2 className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-stone-800">Your Faculty</h2>
+                    <p className="text-xs text-stone-500">Home department</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                  {myFaculties.map(faculty => (
+                    <div 
+                      key={faculty.id}
+                      onClick={() => handleCardClick(CommunityType.Faculty, faculty.id)}
+                      className="group cursor-pointer"
+                    >
+                      <div className="relative">
+                        {/* Glow effect on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-red-900/10 rounded-[2rem] blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        
+                        <div className="relative bg-white rounded-[2rem] p-7 md:p-8 shadow-[0_4px_20px_-10px_rgba(0,0,0,0.06)] border border-stone-100 group-hover:shadow-[0_20px_50px_-15px_rgba(120,53,15,0.15)] group-hover:-translate-y-1.5 transition-all duration-400 ease-out">
+                          {/* Top accent bar */}
+                          <div className="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-red-800 to-red-600 rounded-full" />
+                          
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <h3 className="text-2xl font-black text-stone-800 group-hover:text-red-900 transition-colors duration-300">
+                                {faculty.name}
+                              </h3>
+                              <span className="inline-block mt-3 px-3 py-1.5 rounded-full text-xs font-bold bg-red-50 text-red-800 border border-red-100">
+                                {faculty.code}
+                              </span>
                             </div>
-                            <div>
-                                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Dean</p>
-                                <p className="text-sm font-bold text-stone-700">{faculty.deanName}</p>
+                            <div className="w-12 h-12 rounded-xl bg-stone-50 flex items-center justify-center group-hover:bg-red-50 group-hover:scale-110 transition-all duration-300">
+                              <ArrowUpRight className="w-5 h-5 text-stone-400 group-hover:text-red-600" />
                             </div>
                           </div>
-                        )}
+
+                          {faculty.deanName && (
+                            <div className="mt-6 pt-5 border-t border-stone-100">
+                              <div className="flex items-center gap-3">
+                                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-stone-100 to-white shadow-sm flex items-center justify-center">
+                                  <GraduationCap className="w-5 h-5 text-stone-500" />
+                                </div>
+                                <div>
+                                  <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">Dean</p>
+                                  <p className="text-sm font-bold text-stone-700">{faculty.deanName}</p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
                     </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Two Column Layout for Courses and Groups */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+              
+              {/* Courses Section */}
+              <section>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-stone-700 to-stone-800 shadow-lg shadow-stone-200 flex items-center justify-center">
+                    <Book className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-stone-800">Active Courses</h2>
+                    <p className="text-xs text-stone-500">Your enrolled subjects</p>
                   </div>
                 </div>
-              )) : (
-                <div className="p-6 bg-stone-50 rounded-2xl border border-dashed border-stone-200 text-stone-400 text-sm font-medium text-center">
-                    No Faculty Assigned
+
+                <div className="space-y-4">
+                  {myCourses.length > 0 ? myCourses.map(course => (
+                    <div 
+                      key={course.id}
+                      onClick={() => handleCardClick(CommunityType.Course, course.id)}
+                      className="group cursor-pointer"
+                    >
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-stone-900/5 rounded-2xl translate-y-1 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+                        
+                        <div className="relative bg-white rounded-2xl p-5 shadow-[0_2px_12px_-6px_rgba(0,0,0,0.05)] border border-stone-100/80 group-hover:shadow-[0_12px_35px_-12px_rgba(0,0,0,0.12)] group-hover:-translate-y-1 transition-all duration-300 ease-out">
+                          <div className="flex items-start gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-stone-100 to-stone-50 shadow-inner flex items-center justify-center shrink-0 group-hover:bg-gradient-to-br group-hover:from-red-900 group-hover:to-red-700 transition-all duration-300">
+                              <Book className="w-5 h-5 text-stone-500 group-hover:text-white transition-colors duration-300" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between gap-2">
+                                <h4 className="font-bold text-stone-800 group-hover:text-red-900 transition-colors truncate">
+                                  {course.name}
+                                </h4>
+                                <span className="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-bold bg-stone-100 text-stone-600">
+                                  Year {course.year}
+                                </span>
+                              </div>
+                              <p className="text-sm text-stone-500 mt-1 truncate">{course.facultyName || 'General Faculty'}</p>
+                              <div className="mt-3 pt-3 border-t border-stone-50 flex items-center justify-between">
+                                <code className="text-[10px] font-mono text-stone-400 bg-stone-50 px-2 py-0.5 rounded">{course.code}</code>
+                                <span className="text-xs font-semibold text-red-800 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                  Open <ChevronRight className="w-3 h-3" />
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )) : (
+                    <div className="p-6 bg-stone-50/80 rounded-2xl border-2 border-dashed border-stone-200 text-center">
+                      <p className="text-stone-400 text-sm font-medium">No courses assigned</p>
+                    </div>
+                  )}
                 </div>
-              )}
+              </section>
+
+              {/* Study Groups Section */}
+              <section>
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-800 to-red-900 shadow-lg shadow-red-200 flex items-center justify-center">
+                    <Users className="w-4 h-4 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-stone-800">Study Groups</h2>
+                    <p className="text-xs text-stone-500">Your learning circles</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  {myGroups.length > 0 ? myGroups.map(group => (
+                    <div 
+                      key={group.id}
+                      onClick={() => handleCardClick(CommunityType.Group, group.id)}
+                      className="group cursor-pointer"
+                    >
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-red-900/5 rounded-2xl translate-y-1 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+                        
+                        <div className="relative bg-white rounded-2xl p-5 shadow-[0_2px_12px_-6px_rgba(0,0,0,0.05)] border border-stone-100/80 group-hover:shadow-[0_12px_35px_-12px_rgba(120,53,15,0.12)] group-hover:-translate-y-1 transition-all duration-300 ease-out">
+                          <div className="flex items-start gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-50 to-white shadow-sm flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                              <Users className="w-5 h-5 text-red-600" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="font-bold text-stone-800 group-hover:text-red-900 transition-colors truncate">
+                                {group.name}
+                              </h4>
+                              <p className="text-sm text-stone-500 mt-1 line-clamp-1">{group.description || 'Study together'}</p>
+                              <div className="mt-3 pt-3 border-t border-stone-50 flex items-center justify-between">
+                                <span className="text-[10px] font-bold text-stone-400 bg-stone-50 px-2 py-0.5 rounded uppercase tracking-wider">{group.code}</span>
+                                <span className="text-xs font-semibold text-stone-500">{group.studentCount || 0} members</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )) : (
+                    <div className="p-6 bg-stone-50/80 rounded-2xl border-2 border-dashed border-stone-200 text-center">
+                      <p className="text-stone-400 text-sm font-medium">No groups assigned</p>
+                    </div>
+                  )}
+                </div>
+              </section>
             </div>
 
-            {/* Courses and Groups Column */}
-            <div className="col-span-2 space-y-12">
-              {/* Courses */}
-              <div>
-                 <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold text-stone-700 flex items-center gap-2 text-lg">
-                      <Book size={20} className="text-stone-600" />
-                      Active Courses
-                    </h3>
+            {/* Departments Section - Full Width */}
+            {myDepartments.length > 0 && (
+              <section className="pt-4">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-stone-600 to-stone-700 shadow-lg shadow-stone-200 flex items-center justify-center">
+                    <Building2 className="w-4 h-4 text-white" />
                   </div>
+                  <div>
+                    <h2 className="text-lg font-bold text-stone-800">Department Communities</h2>
+                    <p className="text-xs text-stone-500">Communities you're part of</p>
+                  </div>
+                </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {myCourses.length > 0 ? myCourses.map(course => {
-                        return (
-                            <div 
-                                key={course.id} 
-                                onClick={() => handleCardClick(CommunityType.Course, course.id)}
-                                className="bg-white p-6 rounded-[2rem] border border-stone-100 shadow-sm hover:shadow-lg hover:shadow-stone-200/50 transition-all group cursor-pointer"
-                            >
-                                <div className="flex items-start justify-between mb-5">
-                                     <div className="w-12 h-12 rounded-2xl bg-stone-100 flex items-center justify-center text-stone-600 group-hover:bg-stone-800 group-hover:text-white transition-colors">
-                                         <Book size={24} />
-                                     </div>
-                                     <span className="text-xs font-bold text-stone-600 bg-stone-100 px-3 py-1 rounded-full">
-                                        Year {course.year}
-                                     </span>
-                                </div>
-                                <h4 className="font-bold text-stone-800 text-xl leading-tight group-hover:text-red-900 transition-colors">{course.name}</h4>
-                                <p className="text-sm text-stone-500 mt-2 font-medium">{course.facultyName || 'General Faculty'}</p>
-                                
-                                <div className="mt-6 pt-4 border-t border-stone-50 flex items-center justify-between">
-                                    <span className="text-xs font-mono text-stone-400 font-bold">{course.code}</span>
-                                    <span className="text-xs font-bold text-red-900 flex items-center gap-1 group-hover:underline">
-                                        Go to Community <ChevronRight size={14} />
-                                    </span>
-                                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {myDepartments.map(dept => (
+                    <div 
+                      key={dept.id}
+                      onClick={() => onNavigate(dept.id)}
+                      className="group cursor-pointer"
+                    >
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-stone-900/5 rounded-2xl translate-y-1 blur-sm opacity-0 group-hover:opacity-100 transition-opacity" />
+                        
+                        <div className="relative bg-white rounded-2xl p-5 shadow-[0_2px_12px_-6px_rgba(0,0,0,0.05)] border border-stone-100/80 group-hover:shadow-[0_12px_35px_-12px_rgba(0,0,0,0.12)] group-hover:-translate-y-1 transition-all duration-300 ease-out">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-stone-100 to-stone-50 flex items-center justify-center group-hover:bg-gradient-to-br group-hover:from-red-50 group-hover:to-red-100 transition-all duration-300">
+                              <Building2 className="w-4 h-4 text-stone-500 group-hover:text-red-600 transition-colors" />
                             </div>
-                        );
-                    }) : (
-                        <div className="col-span-full p-6 bg-stone-50 rounded-2xl border border-dashed border-stone-200 text-stone-400 text-sm font-medium text-center">
-                            No Active Course Assigned
-                        </div>
-                    )}
-                  </div>
-              </div>
-
-              {/* Student Groups */}
-              <div>
-                 <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold text-stone-700 flex items-center gap-2 text-lg">
-                      <Users size={20} className="text-red-700" />
-                      Study Groups
-                    </h3>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {myGroups.length > 0 ? myGroups.map(group => (
-                        <div 
-                            key={group.id} 
-                            onClick={() => handleCardClick(CommunityType.Group, group.id)}
-                            className="bg-white p-6 rounded-[2rem] border border-stone-100 shadow-sm hover:shadow-md transition-all group hover:-translate-y-1 cursor-pointer"
-                        >
-                            <div className="flex items-center gap-4 mb-4">
-                                 <div className="w-10 h-10 rounded-full bg-red-50 text-red-700 flex items-center justify-center group-hover:rotate-12 transition-transform">
-                                     <Users size={18} />
-                                 </div>
-                                 <span className="font-bold text-stone-800 text-sm leading-tight">{group.name}</span>
-                            </div>
-                            <p className="text-xs text-stone-500 mb-5 line-clamp-2 font-medium">{group.description || 'No description available.'}</p>
-                            <div className="flex justify-between items-center">
-                                 <span className="bg-stone-100 text-stone-500 text-[10px] font-bold px-2.5 py-1 rounded-lg uppercase tracking-wider">{group.code}</span>
-                                 <span className="text-xs text-stone-400 font-bold">{group.studentCount || 0} Members</span>
-                            </div>
-                        </div>
-                    )) : (
-                        <div className="col-span-full p-6 bg-stone-50 rounded-2xl border border-dashed border-stone-200 text-stone-400 text-sm font-medium text-center">
-                            No Student Group Assigned
-                        </div>
-                    )}
-                  </div>
-              </div>
-
-              {/* Department Communities */}
-              <div>
-                  <div className="flex items-center justify-between mb-6">
-                      <h3 className="font-bold text-stone-700 flex items-center gap-2 text-lg">
-                        <Building2 size={20} className="text-stone-500" />
-                        My Departments
-                      </h3>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {myDepartments.length > 0 ? myDepartments.map(dept => (
-                          <div 
-                            key={dept.id} 
-                            onClick={() => onNavigate(dept.id)}
-                            className="bg-white p-6 rounded-[2rem] border border-stone-100 shadow-sm hover:shadow-md transition-all group hover:-translate-y-1 cursor-pointer relative overflow-hidden"
-                          >
-                                <div className="absolute top-0 right-0 w-24 h-24 bg-stone-100 rounded-full -mr-12 -mt-12 opacity-50"></div>
-                                <h4 className="font-bold text-stone-800 text-lg mb-2 relative z-10">{dept.name}</h4>
-                                <p className="text-xs text-stone-500 mb-4 line-clamp-2 relative z-10">{dept.description || 'Departmental community.'}</p>
-                                <div className="flex items-center justify-between relative z-10">
-                                    <span className="text-xs font-bold text-stone-600 bg-stone-100 px-2 py-1 rounded-md">{dept.memberCount} Members</span>
-                                    <ArrowUpRight size={16} className="text-stone-300 group-hover:text-stone-500 transition-colors"/>
-                                </div>
+                            <ArrowUpRight className="w-4 h-4 text-stone-300 group-hover:text-red-600 transition-colors" />
                           </div>
-                      )) : (
-                          <div className="col-span-full p-6 bg-stone-50 rounded-2xl border border-dashed border-stone-200 text-stone-400 text-sm font-medium text-center">
-                              Not a member of any department communities.
+                          <h4 className="font-bold text-stone-800 text-sm group-hover:text-red-900 transition-colors line-clamp-1 mb-1">
+                            {dept.name}
+                          </h4>
+                          <p className="text-xs text-stone-500 line-clamp-2 mb-3">{dept.description || 'Department community'}</p>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-bold text-stone-500 bg-stone-50 px-2 py-1 rounded">{dept.memberCount} members</span>
                           </div>
-                      )}
-                  </div>
-              </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
 
-            </div>
           </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

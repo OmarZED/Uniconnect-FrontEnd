@@ -22,6 +22,9 @@ import {
   CommunityRole,
   CreateDepartmentCommunityDto,
   UpdateCommunityDto,
+  UpdateFacultyDto,
+  UpdateCourseDto,
+  UpdateStudentGroupDto,
   CommentDto,
   CreateCommentDto,
   UpdateCommentDto,
@@ -160,6 +163,10 @@ export const communityService = {
     return request<CommunityDto[]>('/api/Communities/my-communities');
   },
 
+  getOwnedCommunities: async (): Promise<ApiResponse<CommunityDto[]>> => {
+    return request<CommunityDto[]>('/api/Communities/owned');
+  },
+
   createDepartmentCommunity: async (data: CreateDepartmentCommunityDto): Promise<ApiResponse<CommunityDto>> => {
     return request<CommunityDto>('/api/Communities/department', {
         method: 'POST',
@@ -226,6 +233,13 @@ export const academicService = {
     });
   },
 
+  updateFaculty: async (id: string, data: UpdateFacultyDto): Promise<ApiResponse<FacultyDto>> => {
+    return request<FacultyDto>(`/api/Faculties/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+    });
+  },
+
   deleteFaculty: async (id: string): Promise<ApiResponse<object>> => {
       return request<object>(`/api/Faculties/${id}`, { method: 'DELETE' });
   },
@@ -242,6 +256,13 @@ export const academicService = {
       });
   },
 
+  updateCourse: async (id: string, data: UpdateCourseDto): Promise<ApiResponse<CourseDto>> => {
+      return request<CourseDto>(`/api/Courses/${id}`, {
+          method: 'PUT',
+          body: JSON.stringify(data)
+      });
+  },
+
   deleteCourse: async (id: string): Promise<ApiResponse<object>> => {
       return request<object>(`/api/Courses/${id}`, { method: 'DELETE' });
   },
@@ -254,6 +275,13 @@ export const academicService = {
   createStudentGroup: async (data: CreateStudentGroupDto): Promise<ApiResponse<StudentGroupDto>> => {
       return request<StudentGroupDto>('/api/StudentGroups', {
           method: 'POST',
+          body: JSON.stringify(data)
+      });
+  },
+
+  updateStudentGroup: async (id: string, data: UpdateStudentGroupDto): Promise<ApiResponse<StudentGroupDto>> => {
+      return request<StudentGroupDto>(`/api/StudentGroups/${id}`, {
+          method: 'PUT',
           body: JSON.stringify(data)
       });
   },

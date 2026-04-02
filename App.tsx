@@ -362,10 +362,11 @@ const App: React.FC = () => {
                 <AdminAcademics 
                     faculties={faculties} 
                     courses={courses} 
-                    studentGroups={studentGroups} 
+                    studentGroups={studentGroups}
                     users={users}
                     currentUser={currentUser}
                     onUpdate={handleDataRefresh}
+                    onNavigate={handleNavigateToCommunity}
                 />
             )}
 

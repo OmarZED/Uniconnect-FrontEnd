@@ -123,6 +123,27 @@ export interface CreateStudentGroupDto {
   courseId: string;
 }
 
+export interface UpdateFacultyDto {
+  name?: string;
+  code?: string;
+  description?: string;
+  deanId?: string;
+}
+
+export interface UpdateCourseDto {
+  name?: string;
+  year?: number;
+  code?: string;
+  facultyId?: string;
+}
+
+export interface UpdateStudentGroupDto {
+  name?: string;
+  code?: string;
+  description?: string;
+  courseId?: string;
+}
+
 export enum CommunityType {
   Faculty = 0,
   Course = 1,
@@ -141,6 +162,7 @@ export interface CommunityDto {
   name: string;
   description?: string;
   type: CommunityType | number;
+  ownerId?: string;
   facultyId?: string;
   facultyName?: string;
   courseId?: string;
