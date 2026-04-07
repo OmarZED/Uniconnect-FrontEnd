@@ -250,12 +250,12 @@ const App: React.FC = () => {
   const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <div className="flex min-h-screen bg-[#fafaf9] font-sans text-stone-900 selection:bg-red-200 selection:text-red-900">
+    <div className="flex min-h-screen bg-stone-50 font-sans text-stone-900 selection:bg-red-100 selection:text-red-900">
        
        {/* Mobile Menu Button */}
        <button 
             onClick={() => setSidebarOpen(true)}
-            className="fixed top-4 left-4 z-50 p-3 bg-white text-stone-900 rounded-2xl shadow-xl md:hidden hover:scale-105 transition-transform border border-stone-200"
+            className="fixed top-4 left-4 z-50 p-3 bg-white text-stone-900 rounded-xl shadow-sm md:hidden border border-stone-200"
        >
             <Menu size={24} />
        </button>
@@ -263,13 +263,13 @@ const App: React.FC = () => {
        {/* Mobile Sidebar Overlay */}
        {sidebarOpen && (
           <div 
-             className="fixed inset-0 bg-stone-900/20 backdrop-blur-sm z-40 md:hidden animate-in fade-in"
+             className="fixed inset-0 bg-stone-900/25 z-40 md:hidden animate-in fade-in"
              onClick={() => setSidebarOpen(false)}
           />
        )}
 
        {/* Mobile Sidebar */}
-       <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white transform transition-transform duration-300 ease-in-out md:hidden shadow-2xl ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+       <div className={`fixed inset-y-0 left-0 z-50 w-72 bg-white transform transition-transform duration-300 ease-in-out md:hidden shadow-md ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <Sidebar 
             activeTab={activeTab} 
             setActiveTab={(tab) => { setActiveTab(tab); setSidebarOpen(false); setViewingCommunityId(null); }} 
@@ -291,17 +291,17 @@ const App: React.FC = () => {
        </div>
 
       <main className="flex-1 min-h-screen relative z-10 overflow-x-hidden">
-         <div className="md:hidden h-20 bg-white/80 backdrop-blur-md border-b border-stone-200 sticky top-0 z-30"></div>
+         <div className="md:hidden h-20 bg-white border-b border-stone-200 sticky top-0 z-30"></div>
 
-         <div className="container mx-auto">
+         <div className="max-w-7xl mx-auto px-4 md:px-6">
             {isLoading && (
-                 <div className="fixed top-6 right-6 z-50 bg-white/90 backdrop-blur-md p-4 rounded-full shadow-2xl animate-bounce ring-1 ring-stone-200">
+                 <div className="fixed top-6 right-6 z-50 bg-white p-3 rounded-full shadow-sm ring-1 ring-stone-200">
                     <Loader2 className="animate-spin text-red-900" size={24} />
                  </div>
             )}
 
             {activeTab === 'dashboard' && isAdmin && currentUser && (
-                <div className="p-8 max-w-7xl mx-auto">
+                <div className="py-8">
                     <h1 className="text-4xl font-black text-stone-900 mb-8 tracking-tight">Overview</h1>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -311,7 +311,7 @@ const App: React.FC = () => {
                              { label: 'Faculties', value: faculties.length, color: 'text-red-900', bg: 'bg-red-100', icon: '🏛️' },
                              { label: 'Student Groups', value: studentGroups.length, color: 'text-stone-600', bg: 'bg-stone-50', icon: '🚀' },
                          ].map((stat, idx) => (
-                            <div key={idx} className="bg-white p-6 rounded-3xl shadow-[0_4px_20px_-10px_rgba(0,0,0,0.05)] border border-stone-100 hover:-translate-y-1 transition-all duration-300">
+                            <div key={idx} className="bg-white p-6 rounded-2xl shadow-sm border border-stone-200 transition-colors">
                                 <div className="flex justify-between items-start mb-4">
                                     <h3 className="text-stone-400 text-xs font-bold uppercase tracking-widest">{stat.label}</h3>
                                     <span className="text-xl">{stat.icon}</span>
@@ -323,16 +323,13 @@ const App: React.FC = () => {
                          ))}
                     </div>
 
-                    <div className="relative overflow-hidden bg-gradient-to-r from-red-900 to-stone-900 rounded-[2.5rem] p-12 text-white shadow-2xl shadow-red-900/20">
-                         <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl" />
-                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full -ml-20 -mb-20 blur-3xl" />
-                         
-                         <div className="relative z-10">
-                            <h2 className="text-4xl font-black mb-4 tracking-tight">Welcome back, {currentUser.firstName} 👋</h2>
-                            <p className="text-stone-200 max-w-2xl text-lg leading-relaxed font-medium opacity-90">
+                    <div className="bg-white border border-stone-200 rounded-2xl p-8">
+                         <div>
+                            <h2 className="text-3xl font-bold mb-3 tracking-tight text-stone-900">Welcome back, {currentUser.firstName}</h2>
+                            <p className="text-stone-600 max-w-2xl text-base leading-relaxed font-medium">
                                 Your academic ecosystem is running smoothly. You have full control over faculties, courses, and student groups from this central hub.
                             </p>
-                            <button onClick={() => setActiveTab('academics-manage')} className="mt-8 bg-white text-red-900 px-8 py-4 rounded-2xl font-bold hover:bg-stone-50 transition-all flex items-center gap-3 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                            <button onClick={() => setActiveTab('academics-manage')} className="mt-6 bg-red-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-800 transition-colors flex items-center gap-2">
                                 <span>Manage Academics</span>
                                 <ArrowRight size={20} className="stroke-[3]" />
                             </button>

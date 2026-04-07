@@ -50,14 +50,14 @@ export const StudentSubjectsView: React.FC<StudentSubjectsViewProps> = ({
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-8 space-y-8">
+    <div className="max-w-6xl mx-auto py-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <span className="text-xs font-black text-red-800 uppercase tracking-widest">Student</span>
-          <h1 className="text-3xl font-black text-stone-900 tracking-tight">My Subjects</h1>
-          <p className="text-stone-500 font-medium">Track your enrolled subjects and upcoming tasks.</p>
+          <span className="text-xs font-semibold text-stone-500 uppercase tracking-[0.12em]">Student</span>
+          <h1 className="text-3xl font-bold text-stone-900 tracking-tight">My Subjects</h1>
+          <p className="text-stone-600 text-sm font-medium mt-1">Track your enrolled subjects and upcoming tasks.</p>
         </div>
-        <div className="hidden md:flex items-center gap-2 text-sm text-stone-500 font-semibold">
+        <div className="hidden md:flex items-center gap-2 text-sm text-stone-500 font-medium">
           <span className="w-2 h-2 rounded-full bg-emerald-500" />
           {user.firstName} {user.lastName}
         </div>
@@ -66,12 +66,12 @@ export const StudentSubjectsView: React.FC<StudentSubjectsViewProps> = ({
       <SubjectJoinCard onJoined={handleJoin} />
 
       <div>
-        <h2 className="text-lg font-black text-stone-900 mb-4">Subjects</h2>
+        <h2 className="text-lg font-semibold text-stone-900 mb-4">Subjects</h2>
 
-        {isLoading && <div className="text-stone-400 font-medium">Loading subjects...</div>}
+        {isLoading && <div className="text-stone-500 text-sm font-medium">Loading subjects...</div>}
 
         {!isLoading && subjects.length === 0 && (
-          <div className="bg-white p-8 rounded-3xl border border-stone-100 text-center text-stone-500 font-semibold">
+          <div className="bg-white p-8 rounded-2xl border border-stone-200 text-center text-stone-600 font-medium shadow-sm">
             You haven't joined any subjects yet. Use a code from your teacher to join.
           </div>
         )}
@@ -81,16 +81,16 @@ export const StudentSubjectsView: React.FC<StudentSubjectsViewProps> = ({
             <button
               key={subject.id}
               onClick={() => onOpenSubject(subject.id)}
-              className="text-left bg-white rounded-3xl p-6 border border-stone-100 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.2)] hover:-translate-y-1 transition-all"
+              className="text-left bg-white rounded-2xl p-6 border border-stone-200 shadow-sm hover:border-stone-300 transition-colors"
             >
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-stone-100 text-stone-700 flex items-center justify-center">
+                  <div className="w-11 h-11 rounded-xl bg-stone-100 text-stone-700 flex items-center justify-center">
                     <BookOpen size={20} />
                   </div>
                   <div>
-                    <h3 className="text-lg font-black text-stone-900">{subject.name}</h3>
-                    <p className="text-sm text-stone-500 font-semibold">{subject.code}</p>
+                    <h3 className="text-lg font-semibold text-stone-900">{subject.name}</h3>
+                    <p className="text-sm text-stone-500 font-medium">{subject.code}</p>
                   </div>
                 </div>
                 <ChevronRight size={20} className="text-stone-400" />

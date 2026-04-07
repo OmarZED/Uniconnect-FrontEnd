@@ -10,6 +10,8 @@ interface TeacherTasksViewProps {
 export const TeacherTasksView: React.FC<TeacherTasksViewProps> = ({ user }) => {
   const [subjects, setSubjects] = useState<SubjectDto[]>([]);
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>('');
+  const [loadingSubjects, setLoadingSubjects] = useState(false);
+  const [subjectsError, setSubjectsError] = useState<string | null>(null);
   const [tasks, setTasks] = useState<TaskDto[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionDto[]>([]);
   const [loadingTasks, setLoadingTasks] = useState(false);
@@ -29,24 +31,37 @@ export const TeacherTasksView: React.FC<TeacherTasksViewProps> = ({ user }) => {
 
   useEffect(() => {
     const loadSubjects = async () => {
-      const ownedRes = await communityService.getOwnedCommunities();
-      if (ownedRes.success && ownedRes.data) {
-        const subjectIds = ownedRes.data
-          .filter(c => c.type === CommunityType.Subject && c.subjectId)
+      setLoadingSubjects(true);
+      setSubjectsError(null);
+      const myCommunitiesRes = await communityService.getMyCommunities();
+      if (!myCommunitiesRes.success || !myCommunitiesRes.data) {
+        setSubjects([]);
+        setSubjectsError(myCommunitiesRes.message || 'Failed to load your subjects.');
+        setLoadingSubjects(false);
+        return;
+      }
+
+      const subjectIds = myCommunitiesRes.data
+          .filter(c => {
+            const typeValue = String(c.type).toLowerCase();
+            const isSubjectType = c.type === CommunityType.Subject || typeValue === 'subject' || typeValue === '3';
+            return Boolean(c.subjectId) && isSubjectType;
+          })
           .map(c => c.subjectId as string);
 
-        if (!subjectIds.length) {
-          setSubjects([]);
-          return;
-        }
-
-        const subjectResults = await Promise.all(subjectIds.map(id => academicService.getSubjectById(id)));
-        const list = subjectResults.filter(r => r.success && r.data).map(r => r.data!) as SubjectDto[];
-        setSubjects(list);
-        if (list.length && !selectedSubjectId) {
-          setSelectedSubjectId(list[0].id);
-        }
+      if (!subjectIds.length) {
+        setSubjects([]);
+        setLoadingSubjects(false);
+        return;
       }
+
+      const subjectResults = await Promise.all(subjectIds.map(id => academicService.getSubjectById(id)));
+      const list = subjectResults.filter(r => r.success && r.data).map(r => r.data!) as SubjectDto[];
+      setSubjects(list);
+      if (list.length && !selectedSubjectId) {
+        setSelectedSubjectId(list[0].id);
+      }
+      setLoadingSubjects(false);
     };
 
     loadSubjects();
@@ -131,6 +146,7 @@ export const TeacherTasksView: React.FC<TeacherTasksViewProps> = ({ user }) => {
           <div>
             <h2 className="text-lg font-black text-stone-900">Create Task</h2>
             <p className="text-sm text-stone-500 font-medium">For {selectedSubjectName}</p>
+            {subjectsError && <p className="text-xs text-red-700 mt-1">{subjectsError}</p>}
           </div>
         </div>
 
@@ -163,7 +179,10 @@ export const TeacherTasksView: React.FC<TeacherTasksViewProps> = ({ user }) => {
             className="h-12 rounded-2xl border border-stone-200 px-4 font-semibold text-stone-700"
             value={selectedSubjectId}
             onChange={(e) => setSelectedSubjectId(e.target.value)}
+            disabled={loadingSubjects || subjects.length === 0}
           >
+            {loadingSubjects && <option value="">Loading subjects...</option>}
+            {!loadingSubjects && subjects.length === 0 && <option value="">No owned subjects found</option>}
             {subjects.map(subject => (
               <option key={subject.id} value={subject.id}>{subject.name}</option>
             ))}

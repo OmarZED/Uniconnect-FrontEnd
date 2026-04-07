@@ -104,6 +104,10 @@ export const authService = {
     return request<UserDto>('/api/Auth/me');
   },
 
+  getTeachers: async (): Promise<ApiResponse<UserDto[]>> => {
+    return request<UserDto[]>('/api/Auth/teachers');
+  },
+
   updateProfile: async (data: UpdateProfileDto): Promise<ApiResponse<UserDto>> => {
     const res = await request<UserDto>('/api/Auth/profile', {
         method: 'PUT',

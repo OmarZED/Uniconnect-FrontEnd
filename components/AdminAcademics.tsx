@@ -849,7 +849,7 @@ export const AdminAcademics: React.FC<AdminAcademicsProps> = ({
                     )}
 
                     {(activeSection === 'all' || activeSection === 'subjects') && (
-                        <AdminSubjectsPanel studentGroups={studentGroups} users={users} />
+                        <AdminSubjectsPanel studentGroups={studentGroups} />
                     )}
 
                     {/* Communities Section */}

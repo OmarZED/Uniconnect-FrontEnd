@@ -50,24 +50,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, curre
   ];
 
   return (
-    <div className="w-72 bg-white/90 backdrop-blur-md border-r border-stone-200 flex flex-col h-screen sticky top-0 z-30">
-      <div className="p-8 pb-6 flex-shrink-0">
+    <div className="w-72 bg-white border-r border-stone-200 flex flex-col h-screen sticky top-0 z-30">
+      <div className="px-6 pt-7 pb-5 flex-shrink-0">
         <div className="flex items-center gap-3">
             <div className="relative">
-                <div className="w-10 h-10 bg-gradient-to-tr from-red-900 to-red-800 rounded-xl flex items-center justify-center text-white font-black text-xl shadow-lg shadow-red-200/50 rotate-3">
+                <div className="w-10 h-10 bg-red-900 rounded-xl flex items-center justify-center text-white font-black text-xl">
                     U
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-stone-300 rounded-full border-2 border-white"></div>
             </div>
             <div>
                 <h1 className="text-xl font-black text-stone-900 tracking-tight leading-none">UniConnect</h1>
-                <div className="flex items-center gap-1.5 mt-1">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-                    </span>
-                    <span className="text-[10px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-800 to-red-600 uppercase tracking-widest">Live Campus</span>
-                </div>
+                <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-stone-500">Campus Portal</p>
             </div>
         </div>
       </div>
@@ -75,9 +69,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, curre
       {currentUser && (
         <button 
             onClick={() => setActiveTab('profile')}
-            className="mx-6 mb-8 p-4 bg-stone-50 rounded-2xl border border-stone-100 flex items-center gap-3 group cursor-pointer hover:bg-stone-100 transition-colors text-left w-[calc(100%-3rem)] flex-shrink-0"
+            className="mx-4 mb-6 p-3 bg-stone-50 rounded-xl border border-stone-200 flex items-center gap-3 group cursor-pointer hover:bg-stone-100 transition-colors text-left w-[calc(100%-2rem)] flex-shrink-0"
         >
-             <div className="w-12 h-12 rounded-full bg-white border-2 border-white shadow-md flex items-center justify-center text-stone-700 text-lg font-bold overflow-hidden relative flex-shrink-0">
+             <div className="w-11 h-11 rounded-full bg-white border border-stone-200 flex items-center justify-center text-stone-700 text-lg font-bold overflow-hidden relative flex-shrink-0">
                 {currentUser.profilePictureUrl ? (
                     <img src={currentUser.profilePictureUrl} alt="" className="w-full h-full object-cover" />
                 ) : (
@@ -88,18 +82,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, curre
              </div>
              <div className="overflow-hidden">
                  <p className="text-sm font-bold text-stone-900 truncate group-hover:text-red-900 transition-colors">{currentUser.firstName} {currentUser.lastName}</p>
-                 <p className="text-[11px] text-stone-500 font-semibold">
-                    {isAdmin ? 'Admin Access' : 'Student'}
+                 <p className="text-[11px] text-stone-500 font-medium">
+                    {isAdmin ? 'Admin Access' : isTeacher ? 'Teacher' : 'Student'}
                  </p>
              </div>
         </button>
       )}
 
-      <div className="px-6 mb-2 flex-shrink-0">
-          <p className="text-xs font-extrabold text-stone-400 uppercase tracking-widest px-2 mb-2">Explore</p>
+      <div className="px-4 mb-2 flex-shrink-0">
+          <p className="text-[11px] font-semibold text-stone-500 uppercase tracking-[0.12em] px-3 mb-2">Navigation</p>
       </div>
 
-      <nav className="flex-1 px-4 space-y-2 overflow-y-auto scrollbar-hide">
+      <nav className="flex-1 px-3 space-y-1.5 overflow-y-auto scrollbar-hide">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -107,13 +101,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, curre
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 group relative overflow-hidden flex-shrink-0 ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors group relative overflow-hidden flex-shrink-0 ${
                 isActive 
-                  ? 'bg-gradient-to-r from-red-900 to-red-800 text-white shadow-lg shadow-red-200/50' 
+                  ? 'bg-red-900 text-white' 
                   : 'hover:bg-stone-50 text-stone-500 hover:text-stone-900'
               }`}
             >
-              <Icon size={22} className={`${isActive ? 'text-white' : 'text-stone-400 group-hover:text-red-800'} transition-colors relative z-10`} strokeWidth={isActive ? 2.5 : 2} />
+              <Icon size={19} className={`${isActive ? 'text-white' : 'text-stone-400 group-hover:text-stone-700'} transition-colors relative z-10`} strokeWidth={2} />
               <span className={`font-bold text-sm relative z-10 ${isActive ? 'tracking-wide' : ''}`}>{item.label}</span>
               
               {item.badge && item.badge > 0 && (
@@ -121,19 +115,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, curre
                       {item.badge}
                   </span>
               )}
-
-              {isActive && (
-                  <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-white/20 to-transparent pointer-events-none"></div>
-              )}
             </button>
           );
         })}
       </nav>
 
-      <div className="p-6 mt-auto border-t border-stone-200 flex-shrink-0">
+      <div className="p-4 mt-auto border-t border-stone-200 flex-shrink-0">
         <button 
             onClick={onLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-stone-50 text-stone-400 hover:text-stone-900 transition-colors group font-semibold"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-stone-50 text-stone-500 hover:text-stone-900 transition-colors group font-medium"
         >
             <LogOut size={20} className="group-hover:rotate-12 transition-transform" />
             <span>Sign Out</span>

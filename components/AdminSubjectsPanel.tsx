@@ -1,15 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { CreateSubjectDto, StudentGroupDto, SubjectDto, UserDto, UserRole } from '../types';
-import { academicService } from '../services/api';
+import React, { useEffect, useState } from 'react';
+import { CreateSubjectDto, StudentGroupDto, SubjectDto, UserDto } from '../types';
+import { academicService, authService } from '../services/api';
 import { Plus, X, Loader2 } from 'lucide-react';
 
 interface AdminSubjectsPanelProps {
   studentGroups: StudentGroupDto[];
-  users: UserDto[];
 }
 
-export const AdminSubjectsPanel: React.FC<AdminSubjectsPanelProps> = ({ studentGroups, users }) => {
+export const AdminSubjectsPanel: React.FC<AdminSubjectsPanelProps> = ({ studentGroups }) => {
   const [subjects, setSubjects] = useState<SubjectDto[]>([]);
+  const [teachers, setTeachers] = useState<UserDto[]>([]);
+  const [loadingTeachers, setLoadingTeachers] = useState(false);
+  const [teacherValidationError, setTeacherValidationError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState<CreateSubjectDto>({
@@ -19,8 +21,6 @@ export const AdminSubjectsPanel: React.FC<AdminSubjectsPanelProps> = ({ studentG
     studentGroupId: '',
     teacherId: ''
   });
-
-  const teachers = useMemo(() => users.filter(u => u.role === UserRole.TEACHER), [users]);
 
   useEffect(() => {
     const loadSubjects = async () => {
@@ -39,8 +39,28 @@ export const AdminSubjectsPanel: React.FC<AdminSubjectsPanelProps> = ({ studentG
     }
   }, [studentGroups.length]);
 
+  useEffect(() => {
+    const loadTeachers = async () => {
+      if (!isModalOpen) return;
+      if (teachers.length > 0) return;
+      setLoadingTeachers(true);
+      const res = await authService.getTeachers();
+      if (res.success && res.data) {
+        setTeachers(res.data);
+      }
+      setLoadingTeachers(false);
+    };
+
+    loadTeachers();
+  }, [isModalOpen, teachers.length]);
+
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.teacherId) {
+      setTeacherValidationError('Teacher is required.');
+      return;
+    }
+    setTeacherValidationError(null);
     setIsSubmitting(true);
     const payload: CreateSubjectDto = {
       name: form.name,
@@ -53,6 +73,7 @@ export const AdminSubjectsPanel: React.FC<AdminSubjectsPanelProps> = ({ studentG
     if (res.success && res.data) {
       setSubjects([res.data, ...subjects]);
       setIsModalOpen(false);
+      setTeacherValidationError(null);
       setForm({ name: '', code: '', description: '', studentGroupId: '', teacherId: '' });
     } else {
       alert(res.message || 'Failed to create subject');
@@ -129,14 +150,21 @@ export const AdminSubjectsPanel: React.FC<AdminSubjectsPanelProps> = ({ studentG
               <select
                 className="w-full h-11 rounded-2xl border border-stone-200 px-4 font-semibold text-stone-700"
                 value={form.teacherId}
-                onChange={(e) => setForm({ ...form, teacherId: e.target.value })}
+                onChange={(e) => {
+                  setForm({ ...form, teacherId: e.target.value });
+                  if (e.target.value) setTeacherValidationError(null);
+                }}
                 required
               >
                 <option value="">Select Teacher...</option>
+                {loadingTeachers && <option value="" disabled>Loading teachers...</option>}
                 {teachers.map(t => (
-                  <option key={t.id} value={t.id}>{t.firstName} {t.lastName}</option>
+                  <option key={t.id} value={t.id}>{t.fullName || `${t.firstName || ''} ${t.lastName || ''}`.trim() || t.email || 'Unknown Teacher'}</option>
                 ))}
               </select>
+              {teacherValidationError && (
+                <p className="text-xs text-red-700 -mt-2">{teacherValidationError}</p>
+              )}
               <select
                 className="w-full h-11 rounded-2xl border border-stone-200 px-4 font-semibold text-stone-700"
                 value={form.studentGroupId || ''}
@@ -150,7 +178,7 @@ export const AdminSubjectsPanel: React.FC<AdminSubjectsPanelProps> = ({ studentG
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !form.teacherId}
                 className="w-full h-11 rounded-2xl bg-red-900 text-white font-bold hover:bg-red-800 transition-colors flex items-center justify-center gap-2"
               >
                 {isSubmitting ? <Loader2 className="animate-spin" size={16} /> : null}
