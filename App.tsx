@@ -4,6 +4,9 @@ import { Sidebar } from './components/Sidebar';
 import { CommunityFeed } from './components/CommunityFeed';
 import { AcademicsView } from './components/AcademicsView';
 import { AdminAcademics } from './components/AdminAcademics';
+import { StudentSubjectsView } from './components/StudentSubjectsView';
+import { StudentTasksView } from './components/StudentTasksView';
+import { TeacherTasksView } from './components/TeacherTasksView';
 import { UserManagement } from './components/UserManagement';
 import { UserProfile } from './components/UserProfile';
 import { NotificationsView } from './components/NotificationsView';
@@ -35,6 +38,10 @@ const App: React.FC = () => {
   
   // Navigation Context for Single Community View
   const [viewingCommunityId, setViewingCommunityId] = useState<string | null>(null);
+
+  // Student Subject Navigation
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
+  const [selectedSubjectName, setSelectedSubjectName] = useState('');
 
   // Data State
   const [currentUser, setCurrentUser] = useState<UserDto | undefined>(undefined);
@@ -130,6 +137,20 @@ const App: React.FC = () => {
 
   const handleBackToFeed = () => {
       setViewingCommunityId(null);
+    setSelectedSubjectId(null);
+    setSelectedSubjectName('');
+  };
+
+  const handleOpenSubject = (subjectId: string) => {
+      setSelectedSubjectId(subjectId);
+      const match = myCommunities.find(c => c.subjectId === subjectId);
+      setSelectedSubjectName(match?.subjectName || 'Subject');
+      setActiveTab('student-tasks');
+      window.scrollTo(0, 0);
+  };
+
+  const handleBackToSubjects = () => {
+      setActiveTab('subjects');
   };
 
   const fetchCurrentUser = async () => {
@@ -190,6 +211,8 @@ const App: React.FC = () => {
     setCourses([]);
     setMyCommunities([]);
     setViewingCommunityId(null);
+    setSelectedSubjectId(null);
+    setSelectedSubjectName('');
   };
   
   const handleProfileUpdate = (updatedUser: UserDto) => {
@@ -347,6 +370,17 @@ const App: React.FC = () => {
                 <NotificationsView notifications={notifications} />
             )}
 
+            {activeTab === 'subjects' && currentUser && !isAdmin && (
+                <StudentSubjectsView user={currentUser} myCommunities={myCommunities} onOpenSubject={handleOpenSubject} />
+            )}
+
+            {activeTab === 'student-tasks' && currentUser && selectedSubjectId && !isAdmin && (
+                <div className="p-8 max-w-6xl mx-auto">
+                    <button onClick={handleBackToSubjects} className="mb-6 text-sm font-bold text-stone-600 hover:text-red-900">Back to Subjects</button>
+                    <StudentTasksView subjectId={selectedSubjectId} subjectName={selectedSubjectName} />
+                </div>
+            )}
+
             {activeTab === 'my-academics' && !isAdmin && (
                 <AcademicsView 
                     faculties={faculties} 
@@ -356,6 +390,10 @@ const App: React.FC = () => {
                     myCommunities={myCommunities}
                     onNavigate={handleNavigateToCommunity}
                 />
+            )}
+
+            {activeTab === 'tasks' && currentUser && currentUser.role === UserRole.TEACHER && (
+                <TeacherTasksView currentUser={currentUser} />
             )}
 
             {activeTab === 'academics-manage' && isAdmin && currentUser && (
@@ -394,3 +432,4 @@ const App: React.FC = () => {
 };
 
 export default App;
+

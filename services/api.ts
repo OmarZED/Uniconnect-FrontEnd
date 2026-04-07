@@ -28,7 +28,17 @@ import {
   CommentDto,
   CreateCommentDto,
   UpdateCommentDto,
-  VoteType
+  VoteType,
+  SubjectDto,
+  CreateSubjectDto,
+  JoinSubjectByCodeDto,
+  TaskDto,
+  CreateTaskDto,
+  UpdateTaskDto,
+  SubmissionDto,
+  CreateSubmissionDto,
+  UpdateSubmissionDto,
+  GradeSubmissionDto
 } from '../types';
 
 const API_URL = (import.meta as any).env?.VITE_API_URL || '';
@@ -288,5 +298,87 @@ export const academicService = {
 
   deleteStudentGroup: async (id: string): Promise<ApiResponse<object>> => {
       return request<object>(`/api/StudentGroups/${id}`, { method: 'DELETE' });
+  },
+
+  // --- SUBJECTS ---
+  createSubject: async (data: CreateSubjectDto): Promise<ApiResponse<SubjectDto>> => {
+    return request<SubjectDto>('/api/Subjects', {
+        method: 'POST',
+        body: JSON.stringify(data)
+    });
+  },
+
+  getSubjectById: async (id: string): Promise<ApiResponse<SubjectDto>> => {
+    return request<SubjectDto>(`/api/Subjects/${id}`);
+  },
+
+  getSubjectsByGroup: async (groupId: string): Promise<ApiResponse<SubjectDto[]>> => {
+    return request<SubjectDto[]>(`/api/Subjects/group/${groupId}`);
+  },
+
+  joinSubjectByCode: async (data: JoinSubjectByCodeDto): Promise<ApiResponse<SubjectDto>> => {
+    return request<SubjectDto>('/api/Subjects/join', {
+        method: 'POST',
+        body: JSON.stringify(data)
+    });
+  }
+};
+
+export const taskService = {
+  createTask: async (data: CreateTaskDto): Promise<ApiResponse<TaskDto>> => {
+    return request<TaskDto>('/api/Tasks', {
+        method: 'POST',
+        body: JSON.stringify(data)
+    });
+  },
+
+  getTasksBySubject: async (subjectId: string): Promise<ApiResponse<TaskDto[]>> => {
+    return request<TaskDto[]>(`/api/Tasks/subject/${subjectId}`);
+  },
+
+  getTaskById: async (id: string): Promise<ApiResponse<TaskDto>> => {
+    return request<TaskDto>(`/api/Tasks/${id}`);
+  },
+
+  updateTask: async (id: string, data: UpdateTaskDto): Promise<ApiResponse<TaskDto>> => {
+    return request<TaskDto>(`/api/Tasks/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+    });
+  },
+
+  deleteTask: async (id: string): Promise<ApiResponse<object>> => {
+    return request<object>(`/api/Tasks/${id}`, { method: 'DELETE' });
+  }
+};
+
+export const submissionService = {
+  createSubmission: async (data: CreateSubmissionDto): Promise<ApiResponse<SubmissionDto>> => {
+    return request<SubmissionDto>('/api/Submissions', {
+        method: 'POST',
+        body: JSON.stringify(data)
+    });
+  },
+
+  getSubmissionsByTask: async (taskId: string): Promise<ApiResponse<SubmissionDto[]>> => {
+    return request<SubmissionDto[]>(`/api/tasks/${taskId}/submissions`);
+  },
+
+  getSubmissionById: async (id: string): Promise<ApiResponse<SubmissionDto>> => {
+    return request<SubmissionDto>(`/api/Submissions/${id}`);
+  },
+
+  updateSubmission: async (id: string, data: UpdateSubmissionDto): Promise<ApiResponse<SubmissionDto>> => {
+    return request<SubmissionDto>(`/api/Submissions/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+    });
+  },
+
+  gradeSubmission: async (id: string, data: GradeSubmissionDto): Promise<ApiResponse<SubmissionDto>> => {
+    return request<SubmissionDto>(`/api/Submissions/${id}/grade`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+    });
   }
 };

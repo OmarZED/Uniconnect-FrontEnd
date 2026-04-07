@@ -148,7 +148,8 @@ export enum CommunityType {
   Faculty = 0,
   Course = 1,
   Group = 2,
-  Department = 3
+  Subject = 3,
+  Department = 4
 }
 
 export enum CommunityRole {
@@ -169,6 +170,8 @@ export interface CommunityDto {
   courseName?: string;
   studentGroupId?: string;
   studentGroupName?: string;
+  subjectId?: string;
+  subjectName?: string;
   memberCount?: number;
   postCount?: number;
   allowPosts?: boolean;
@@ -310,6 +313,100 @@ export interface UpdateCommentDto {
 
 export interface AddCommentVoteDto {
   voteType: VoteType;
+}
+
+export interface SubjectDto {
+  id: string;
+  name: string;
+  code: string;
+  description?: string;
+  studentGroupId?: string | null;
+  studentGroupName?: string | null;
+  courseId?: string | null;
+  courseName?: string | null;
+  facultyId?: string | null;
+  facultyName?: string | null;
+  teacherId?: string | null;
+  teacherName?: string | null;
+  joinCode?: string;
+  createdAt?: string;
+  isActive?: boolean;
+}
+
+export interface CreateSubjectDto {
+  name: string;
+  code: string;
+  description?: string;
+  studentGroupId?: string | null;
+  teacherId: string;
+}
+
+export interface JoinSubjectByCodeDto {
+  code: string;
+}
+
+export interface TaskDto {
+  id: string;
+  title: string;
+  description: string;
+  dueDate: string;
+  maxScore: number;
+  subjectId: string;
+  subjectName: string;
+  createdByTeacherId: string;
+  createdByTeacherName: string;
+  createdAt: string;
+  updatedAt?: string;
+  isActive: boolean;
+}
+
+export interface CreateTaskDto {
+  title: string;
+  description: string;
+  dueDate: string;
+  maxScore: number;
+  subjectId: string;
+}
+
+export interface UpdateTaskDto {
+  title?: string;
+  description?: string;
+  dueDate?: string;
+  maxScore?: number;
+}
+
+export interface SubmissionDto {
+  id: string;
+  taskId: string;
+  taskTitle: string;
+  studentId: string;
+  studentName: string;
+  content: string;
+  attachmentUrl?: string;
+  status: 'Draft' | 'Submitted' | 'Graded';
+  submittedAt: string;
+  grade?: number;
+  feedback?: string;
+  gradedAt?: string;
+  createdAt: string;
+  updatedAt?: string;
+  isActive: boolean;
+}
+
+export interface CreateSubmissionDto {
+  taskId: string;
+  content: string;
+  attachmentUrl?: string;
+}
+
+export interface UpdateSubmissionDto {
+  content: string;
+  attachmentUrl?: string;
+}
+
+export interface GradeSubmissionDto {
+  grade: number;
+  feedback?: string;
 }
 
 export type NotificationType = 'like' | 'comment' | 'follow' | 'system' | 'group_invite';

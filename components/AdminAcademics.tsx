@@ -6,6 +6,7 @@ import {
     UpdateFacultyDto, UpdateCourseDto, UpdateStudentGroupDto
 } from '../types';
 import { academicService, communityService } from '../services/api';
+import { AdminSubjectsPanel } from './AdminSubjectsPanel';
 import { 
     Building2, Book, Users, Plus, X, Check, Loader2, 
     GraduationCap, Search, Edit2, Trash2, ChevronDown, ChevronUp,
@@ -24,7 +25,7 @@ interface AdminAcademicsProps {
 
 type EntityType = 'faculty' | 'course' | 'group';
 type ModalMode = 'create' | 'edit';
-type SectionType = 'all' | 'faculties' | 'courses' | 'groups' | 'communities';
+type SectionType = 'all' | 'faculties' | 'courses' | 'groups' | 'subjects' | 'communities';
 
 export const AdminAcademics: React.FC<AdminAcademicsProps> = ({ 
     faculties, courses, studentGroups, users, currentUser, onUpdate, onNavigate 
@@ -259,6 +260,7 @@ export const AdminAcademics: React.FC<AdminAcademicsProps> = ({
         { id: 'faculties', label: 'Faculties', icon: Building2, count: faculties.length },
         { id: 'courses', label: 'Courses', icon: Book, count: courses.length },
         { id: 'groups', label: 'Groups', icon: Users, count: studentGroups.length },
+        { id: 'subjects', label: 'Subjects', icon: GraduationCap, count: 0 },
         { id: 'communities', label: 'Communities', icon: MessageSquare, count: ownedCommunities.length },
     ];
 
@@ -846,6 +848,10 @@ export const AdminAcademics: React.FC<AdminAcademicsProps> = ({
                         </section>
                     )}
 
+                    {(activeSection === 'all' || activeSection === 'subjects') && (
+                        <AdminSubjectsPanel studentGroups={studentGroups} users={users} />
+                    )}
+
                     {/* Communities Section */}
                     {(activeSection === 'all' || activeSection === 'communities') && renderCommunitiesSection()}
                 </div>
@@ -872,3 +878,5 @@ export const AdminAcademics: React.FC<AdminAcademicsProps> = ({
         </div>
     );
 };
+
+

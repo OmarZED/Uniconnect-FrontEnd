@@ -26,6 +26,8 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, currentUser, onLogout, notificationCount = 0 }) => {
   
   const isAdmin = currentUser && currentUser.role !== UserRole.STUDENT;
+  const isStudent = currentUser?.role === UserRole.STUDENT;
+  const isTeacher = currentUser?.role === UserRole.TEACHER;
 
   const menuItems = [
     { id: 'community', label: 'Community Feed', icon: MessageSquare },
@@ -36,7 +38,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, curre
         { id: 'users', label: 'People', icon: Users },
         { id: 'reports', label: 'Reports', icon: Flag },
     ] : []),
-    ...(!isAdmin ? [
+    ...(isTeacher ? [
+        { id: 'tasks', label: 'Tasks', icon: BookOpen },
+    ] : []),
+    ...(isStudent ? [
+        { id: 'subjects', label: 'My Subjects', icon: GraduationCap },
         { id: 'my-academics', label: 'My Studies', icon: BookOpen },
     ] : []),
     { id: 'notifications', label: 'Notifications', icon: Bell, badge: notificationCount },
@@ -136,3 +142,5 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, curre
     </div>
   );
 };
+
+
